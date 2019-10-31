@@ -96,7 +96,8 @@ while True:
         (H, W) = frame.shape[:2]
     
     # boundary line coordinates
-    line = [(0, H//2), (W, H//2)]
+    line_a = [(0, H//5), (W, H//5)]
+    line_b = [(0, 3*H//5), (W, 3*H//5)]
 
     # run YOLO object detector
     blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (416, 416), swapRB=True, crop=False)
@@ -170,11 +171,21 @@ while True:
                 p1 = (int(x2 + (w2-x2)/2), int(y2 + (h2-y2)/2))
                 
                 #cv2.line(frame, p0, p1, color, 3)
-                d = ((p0[0] - line[0][0])*(line[1][1] - line[0][1]))- ((p0[1] - line[0][1])*(line[1][0] - line[0][0]))
-                if intersect(p0, p1, line[0], line[1]):
-                    if d < 0:
+                d_a = ((p0[0] - line_a[0][0])*(line_a[1][1] - line_a[0][1]))- ((p0[1] - line_a[0][1])*(line_a[1][0] - line_a[0][0]))
+                d_b = ((p0[0] - line_b[0][0])*(line_b[1][1] - line_b[0][1]))- ((p0[1] - line_b[0][1])*(line_b[1][0] - line_b[0][0]))
+
+                if intersect(p0, p1, line_a[0], line_a[1]):
+                    print("upper boundary passed")
+                    if d_a < 0:
                         entry += 1
-                    if d > 0:
+                    if d_a > 0:
+                        exit += 1
+
+                if intersect(p0, p1, line_b[0], line_b[1]):
+                    print("lower boundary passed")
+                    if d_b > 0:
+                        entry += 1
+                    if d_b < 0:
                         exit += 1
 
             text = "{}".format(indexIDs[i])
@@ -182,8 +193,9 @@ while True:
             i += 1
 
     print(entry, exit)
-    # draw boundary line
-    cv2.line(frame, line[0], line[1], (0, 255, 255), 5)
+    # draw boundary lines
+    cv2.line(frame, line_a[0], line_a[1], (0, 255, 255), 5)
+    cv2.line(frame, line_b[0], line_b[1], (0, 255, 255), 5)
 
     # draw counter
     cv2.putText(frame, "Entries: " + str(entry), (50,350), cv2.FONT_HERSHEY_DUPLEX, 0.4, (0, 255, 255), 1)
@@ -213,3 +225,6 @@ while True:
 print("[INFO] cleaning up...")
 writer.release()
 vs.release()
+
+## TODO: Ask for user input for lines and assign sides using the first frame --line 0,1,2
+## TODO: Use user input to assign lines
