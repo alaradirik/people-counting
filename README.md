@@ -1,14 +1,10 @@
 # Object Counter
 
-
+University of Glasgow, MSc. Thesis Project
 
 ## Installation
 
 
-
-
-    }
-    
 ## References
 ### YOLOv3 :
 

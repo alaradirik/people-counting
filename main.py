@@ -1,33 +1,26 @@
 import os
-import glob
-import argparse
 import time
 
 import cv2
 import imutils
 import numpy as np
 
-from utils import intersect, clear_output
+from utils.math_utils import intersect, clear_output
+from utils import process_input
 from sort import *
+
 
 tracker = Sort()
 memory = {}
 entry = 0
 exit = 0
 
-# construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--input", help="path to input video", default = "./input/det_t1_video_00031_test.avi")
-ap.add_argument("-o", "--output", help="path to output video", default = "./output/")
-ap.add_argument("-y", "--model", help="base path to YOLO directory", default = "yolo")
-ap.add_argument("-c", "--confidence", type=float, default=0.5, help="minimum probability to filter weak detections")
-ap.add_argument("-t", "--threshold", type=float, default=0.3, help="threshold when applyong non-maxima suppression")
-args = vars(ap.parse_args())
-
-
 YOLO_DIR = "./yolo-obj"
 
 def download_model_weights():
+    """
+    Download pre-trained model weights.
+    """
     download_url = "https://pjreddie.com/media/files/yolov3.weights"
     
     print("downloading model weights...")
@@ -38,6 +31,9 @@ def download_model_weights():
 
 
 def load_model():
+    """
+    Load object detection model into memory.
+    """
     model_found = 0
     files = os.listdir(YOLO_DIR)
     
@@ -59,7 +55,32 @@ def load_model():
     ln = [ln[i[0] - 1] for i in net.getUnconnectedOutLayers()]
     return LABELS, net, ln
 
+
+def define_ROI(line_choice, height, width):
+    """
+    Define Region of Interest based on user input.
+    Input Arguments:
+        line_choice: 0 for automatic ROI assignment
+                     1 to draw single boundary line
+                     2 to define ROI bounded by two lines
+    """
+    if line_choice == 0:
+        line_a = [(0, height//5), (width, height//5)]
+        line_b = [(0, 3*height//5), (width, 3*height//5)]
+        return line_a, line_b
+
+    if line_choice == 1:
+        # Ask user to draw a line
+        return
+        
+    if line_choice == 2:
+        # Ask user to draw two lines
+        return
+    ## TODO: Use user input to assign lines
+
+
 clear_output()
+args = process_input.parse_user_input()
 # load YOLO and COCO class labels
 LABELS, net, ln = load_model()
 
@@ -72,16 +93,12 @@ vs = cv2.VideoCapture(args["input"])
 writer = None
 (W, H) = (None, None)
 
-frameIndex = 0
-
-# get the number of frames
+frame_index = 0
 try:
-    prop = cv2.cv.CV_CAP_PROP_FRAME_COUNT if imutils.is_cv2() \
-        else cv2.CAP_PROP_FRAME_COUNT
+    prop = cv2.cv.CV_CAP_PROP_FRAME_COUNT if imutils.is_cv2() else cv2.CAP_PROP_FRAME_COUNT
     total = int(vs.get(prop))
     print("[INFO] {} total frames in video".format(total))
 except:
-    print("[INFO] could not determine # of frames in video")
     total = -1
 
 # loop over frames from the video file stream
@@ -91,13 +108,11 @@ while True:
     if not grabbed:
         break
 
-    # get video dimensions
     if W is None or H is None:
         (H, W) = frame.shape[:2]
-    
-    # boundary line coordinates
-    line_a = [(0, H//5), (W, H//5)]
-    line_b = [(0, 3*H//5), (W, 3*H//5)]
+
+    if frame_index == 0:
+        line_a, line_b = define_ROI(int(args["line"]), H, W)
 
     # run YOLO object detector
     blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (416, 416), swapRB=True, crop=False)
@@ -202,7 +217,7 @@ while True:
     cv2.putText(frame, "Exits: " + str(exit), (150,350), cv2.FONT_HERSHEY_DUPLEX, 0.4, (0, 255, 255), 1)
 
     # saves image file
-    cv2.imwrite("output/frame-{}.png".format(frameIndex), frame)
+    cv2.imwrite("output/frame-{}.png".format(frame_index), frame)
 
     # write to video
     if writer is None:
@@ -211,20 +226,14 @@ while True:
 
     # write the output frame to disk
     writer.write(frame)
+    frame_index += 1
 
-    # increase frame index
-    frameIndex += 1
-
-    if frameIndex >= 4000:
+    if frame_index == total-1:
         print("[INFO] cleaning up...")
         writer.release()
         vs.release()
         exit()
 
-# release the file pointers
 print("[INFO] cleaning up...")
 writer.release()
 vs.release()
-
-## TODO: Ask for user input for lines and assign sides using the first frame --line 0,1,2
-## TODO: Use user input to assign lines
