@@ -2,6 +2,22 @@
 
 University of Glasgow, MSc. Thesis Project
 
+## Project Structure
+
+    .
+    ├── yolo-obj                        # Pre-trained model files
+        └── coco.names                  # Object labels (person, car, etc.)
+        └── yolov3.cfg                  # Model configuration
+        └── yolov3.weights              # Model weights
+    ├── utils                           # Utility functions to process inputs and video frames
+        └── image_utils.py                 
+        └── math_utils.py                  
+        └── process_input.py                         
+    ├── sort.py                         # SORT object tracker
+    ├── main.py                         # Functions to run object detector and counter
+    ├── requirements.txt                # Dependencies
+    └── README.md
+
 ## Installation
 
 
