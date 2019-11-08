@@ -21,12 +21,12 @@ University of Glasgow, MSc. Thesis Project
 ## Installation
 
 Input arguments and options:
-- input:        path to input video
-- output:       path to output folder
-- model:        object detector model - default and only available model is YOLO for now
-- confidence:   confidence threshold for object detection - default is 0.5
-- threshold:    non-maxima suppression threshold - default is 0.3
-- line:         automatically assign ROI or use user input to draw 1 or 2 boundary lines - select 0,1 or 2
+- **input**                path to input video
+- **output**               path to output folder
+- **model**                object detector model - default and only available model is YOLO for now
+- **confidence**           confidence threshold for object detection - default is 0.5
+- **threshold**            non-maxima suppression threshold - default is 0.3
+- **line**                 automatically assign ROI or use user input to draw 1 or 2 boundary lines - select 0,1 or 2
 
 Run the script:
 python main.py --input [INPUT_VIDEO_PATH] --output [OUTPUT_FOLDER] --line 0
