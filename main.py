@@ -217,7 +217,7 @@ while True:
     cv2.putText(frame, "Exits: " + str(exit), (150,350), cv2.FONT_HERSHEY_DUPLEX, 0.4, (0, 255, 255), 1)
 
     # saves image file
-    cv2.imwrite("output/frame-{}.png".format(frame_index), frame)
+    cv2.imwrite("{}frame-{}.png".format(args["output"], frame_index), frame)
 
     # write to video
     if writer is None:
