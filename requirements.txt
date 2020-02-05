@@ -4,3 +4,6 @@ imutils==0.5.3
 numba==0.46.0
 filterpy==1.4.5
 scikit-learn==0.21.3
+tensorflow==1.14.0
+filterpy==1.4.5
+protobuf==3.9.1

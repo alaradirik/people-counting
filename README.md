@@ -5,14 +5,20 @@ University of Glasgow, MSc. Thesis Project
 ## Project Structure
 
     .
-    ├── yolo-obj                        # Pre-trained model files
-        └── coco.names                  # Object labels (person, car, etc.)
-        └── yolov3.cfg                  # Model configuration
-        └── yolov3.weights              # Model weights
+    ├── models                          # Pre-trained model files and frozen TF graphs
+        └── yolo-obj                    # YOLOv3
+        └── faster-rcnn                 # Faster-RCNN Inception
+        └── ssd-mobilenet               # SSD Mobilenet
+        └── ssd-inception               # SSD Inception
     ├── utils                           # Utility functions to process inputs and video frames
-        └── image_utils.py                 
-        └── math_utils.py                  
-        └── process_input.py                         
+        └── image_utils.py
+        └── draw_line.py                # Interface to draw user defined ROI                 
+        └── math_utils.py
+        └── label_map_util.py                  
+        └── process_input.py
+    ├── protos/                         # Tensorflow Object Detection API protos
+    ├── input/                          # Input videos
+    ├── output/                         # Output videos                         
     ├── sort.py                         # SORT object tracker
     ├── main.py                         # Functions to run object detector and counter
     ├── requirements.txt                # Dependencies
@@ -23,10 +29,10 @@ University of Glasgow, MSc. Thesis Project
 Input arguments and options:
 - **input:** path to input video
 - **output:** path to output folder
-- **model:** object detector model - default and only available model is YOLO for now
+- **model:** object detector model - available models can be found at https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 - **confidence:** confidence threshold for object detection - default is 0.5
 - **threshold:** non-maxima suppression threshold - default is 0.3
-- **line:** automatically assign ROI or use user input to draw 1 or 2 boundary lines - select 0,1 or 2
+- **line:** automatically assign ROI or use user input to draw 2 boundary lines - select 0 or 1
 
 Run the script:
 python main.py --input [INPUT_VIDEO_PATH] --output [OUTPUT_FOLDER] --line 0
