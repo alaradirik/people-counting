@@ -1,8 +1,9 @@
 **/__pycache__
 **/.DS_Store
 
-models/yolo-obj/
-models/ssd_inception_v2_coco_2017_11_17/
-models/ssd_mobilenet_v1_coco_2018_01_28/
-models/faster_rcnn_inception_resnet_v2_atrous_coco_2018_01_28/
+detectors/yolo_v3/
+detectors/ssd_inception_v2_coco_2017_11_17/
+detectors/ssd_mobilenet_v1_coco_2018_01_28/
+detectors/faster_rcnn_inception_resnet_v2_atrous_coco_2018_01_28/
 output/
+input_videos/
