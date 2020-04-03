@@ -15,11 +15,9 @@ class GroundTruthDetections:
         self.all_dets = np.loadtxt(fname ,delimiter=',') 
         self._frames = int(self.all_dets[:, 1].max()) + 1 
 
-    '''as in practical realtime MOT, the detector doesn't run on every single frame'''
     def perform_detection(self, detect_prob=0.4):
         return int(np.random.choice(2, 1, p=[1 - detect_prob, detect_prob]))
 
-    '''returns the detected items positions or [] if no detection'''
     def get_detected_items(self, frame):
         if self.perform_detection() or frame == 0:
             return self.all_dets[self.all_dets[:, 1] == frame, 8:]
@@ -28,6 +26,7 @@ class GroundTruthDetections:
 
     def get_total_frames(self):
         return self._frames
+
 
 def download_yolo_weights():
     """
@@ -120,6 +119,30 @@ def get_haar_detections(frame, cascade, frame_index):
         dets = []
         for (x, y, w, h) in boxes:
             dets.append([x, y, x+w, y+h, 1])
+        dets = np.array(dets)
+        return dets
+
+    else:
+        return []
+
+def get_hog_svm_detections(frame, frame_index):
+    if perform_detection() or frame_index == 0:
+        hog = cv2.HOGDescriptor()
+        hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+
+        (rects, weights) = hog.detectMultiScale(
+            frame, 
+            winStride=(4, 4),
+            padding=(8, 8), 
+            scale=1.05
+        )
+
+        rects = np.array([[x, y, x + w, y + h] for (x, y, w, h) in rects])
+        pick = non_max_suppression(rects, probs=None, overlapThresh=0.65)
+        
+        dets = []
+        for (x, y, x2, y2) in pick:
+            dets.append([x, y, x2, y2, 1])
         dets = np.array(dets)
         return dets
 

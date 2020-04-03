@@ -12,7 +12,7 @@ from utils import get_input_args, math_utils, file_utils
 from utils import image_utils, model_utils
 
 from trackers.sort import Sort
-tracker = Sort(use_dlib= True)
+tracker = Sort(use_dlib=True)
 
 # Initialize tracker
 entry = 0
@@ -42,8 +42,40 @@ if args['model'] == 'haar':
         if not grabbed:
             break
 
-
         detections = model_utils.get_haar_detections(frame, person_cascade, frame_index)
+        trackers = tracker.update(detections, frame)
+
+        current = {}
+        for d in trackers:
+            d = d.astype(np.int32)
+
+            frame = image_utils.draw_box(frame, d, (0,255,0))
+
+            if detections != []:
+                cv2.putText(frame, 'Detection active', (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)
+            
+            current[d[4]] = (d[0], d[1], d[2], d[3])
+            if d[4] in tracker.previous:
+                previous_box = tracker.previous[d[4]]
+                entry, exit = math_utils.compare_with_prev_position(previous_box, d, line, entry, exit)
+
+        frame = image_utils.annotate_frame(frame, line, entry, exit, H, W)
+        
+        tracker.previous = current
+        writer.write(frame)
+        frame_index += 1
+
+    writer.release()
+    vs.release()
+
+elif args["model"] == "hog":
+    frame_index = 0
+    while True:
+        (grabbed, frame) = vs.read()
+        if not grabbed:
+            break
+
+        detections = model_utils.get_hog_svm_detections(frame, frame_index)
         trackers = tracker.update(detections, frame)
 
         current = {}

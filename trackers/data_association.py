@@ -17,7 +17,7 @@ from sklearn.utils.linear_assignment_ import linear_assignment
 @jit
 def iou(bb_test, bb_gt):
     """
-    Computes IUO between two bboxes in the form [x1,y1,x2,y2]
+    Computes IUO between two boundary boxes in the form [x1,y1,x2,y2]
     """
     xx1 = np.maximum(bb_test[0], bb_gt[0])
     yy1 = np.maximum(bb_test[1], bb_gt[1])
@@ -50,18 +50,20 @@ def associate_detections_to_trackers(detections, trackers, iou_threshold = 0.3):
             
     # Minimise the total assignment cost
     matched_indices = linear_assignment(-iou_matrix)
-
+    
+    # Find unmatched detections
     unmatched_detections = []
     for d, det in enumerate(detections):
         if d not in matched_indices[:, 0]:
             unmatched_detections.append(d)
-
+    
+    # Find lost tracklets
     unmatched_trackers = []
     for t, trk in enumerate(trackers):
         if t not in matched_indices[:, 1]:
             unmatched_trackers.append(t)
 
-    # filter out matched with low IOU
+    # Filter out matched with low IOU
     matches = []
     for m in matched_indices:
         if iou_matrix[m[0], m[1]] < iou_threshold:
