@@ -34,6 +34,7 @@ Input arguments and options:
 - **input:** path to input video
 - **output:** path to output folder
 - **model:** object detection model 
+- **dlib:** use kernelized correlation filter or Kalman Filter - True or False 
 - **confidence:** confidence threshold for object detection - default is 0.5 
 - **threshold:** non-maxima suppression threshold - default is 0.3
 - **line:** automatically assign ROI, use user input to draw a boundary line on frame or manually enter line coordinates - select 0, 1 or 2
