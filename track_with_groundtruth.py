@@ -63,5 +63,4 @@ while True:
     frame_index += 1
 
 
-print("[INFO] cleaning up...")
 vs.release()

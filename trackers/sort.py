@@ -25,7 +25,7 @@ from .data_association import associate_detections_to_trackers
 
 class Sort:
 
-    def __init__(self, max_age=1, min_hits=3, use_dlib = False):
+    def __init__(self, max_age=3, min_hits=3, use_dlib = False):
         """
         Sets key parameters for SORT
         """

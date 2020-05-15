@@ -9,6 +9,7 @@ This project an experiment to compare the performance of combinations of popular
     .
     ├── detector/                       # Pre-trained person detection models files and frozen TF graphs
     ├── trackers/                       # Multi-object tracking algorithms
+    ├── deep_sort/                      # DeepSORT module   
     ├── utils                           # Utility functions to process inputs and video frames
         └── file_utils.py
         └── image_utils.py
@@ -20,7 +21,8 @@ This project an experiment to compare the performance of combinations of popular
     ├── input_videos/                   # Input videos
     ├── output/                         # Output videos                         
     ├── ground_truth                    # Ground truth data for the Oxford Town Centre Dataset
-    ├── main.py                         # Runs the pedestrian counting app
+    ├── run_sort.py                     # Runs SORT
+    ├── run_deepsort.py                 # Runs DeepSORT
     ├── groundtruth.py                  # Generates Oxford Town Centre video with ground truth annotations
     ├── track_with_groundtruth.py       # Track using ground truth detections (for Oxford Town Centre video)
     ├── requirements.txt                # Dependencies
@@ -43,29 +45,10 @@ python main.py --model [DETECTION_MODEL]--input [INPUT_VIDEO_PATH] --output [OUT
 - YOLOv3 can be loaded using the model argument: --model yolo
 - Tensorflow models pretrained on the COCO dataset. A full list of the available models can be seen at [Tensorflow Model Zoo.](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
 - HAAR Cascade for full body detection: --model haar
+- HOG with Linear SVM: --model hog
 
 ## Available Trackers
-- SORT with Kalman Filter
+- [SORT](https://arxiv.org/abs/1602.00763) with Kalman Filter
 - SORT with Correlation Filter
-
-## References
-#### YOLOv3 :
-
-    @article{yolov3,
-    title={YOLOv3: An Incremental Improvement},
-    author={Redmon, Joseph and Farhadi, Ali},
-    journal = {arXiv},
-    year={2018}
-    }
-
-#### SORT :
-
-    @inproceedings{Bewley2016_sort,
-      author={Bewley, Alex and Ge, Zongyuan and Ott, Lionel and Ramos, Fabio and Upcroft, Ben},
-      booktitle={2016 IEEE International Conference on Image Processing (ICIP)},
-      title={Simple online and realtime tracking},
-      year={2016},
-      pages={3464-3468},
-      keywords={Benchmark testing;Complexity theory;Detectors;Kalman filters;Target tracking;Visualization;Computer Vision;Data Association;Detection;Multiple Object Tracking},
-      doi={10.1109/ICIP.2016.7533003}
+- [DeepSORT](https://arxiv.org/abs/1703.07402)
 
