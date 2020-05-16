@@ -4,6 +4,7 @@ University of Glasgow, MSc. Thesis Project
 
 This project an experiment to compare the performance of combinations of popular and state-of-the-art object detection models and multi-object tracking algorithms. All combinations are evaluated on the [Town Centre Dataset](http://www.robots.ox.ac.uk/~lav/Research/Projects/2009bbenfold_headpose/project.html) with the objective of tracking and counting the pedestrians crossing a LOI in a video sequence (MOT). New evaluation datasets will be added.
 
+
 ## Project Structure
 
     .
@@ -57,3 +58,4 @@ Use --model ground-truth to track with ground truth detections. ground-truth opt
 - SORT with Correlation Filter
 - [DeepSORT](https://arxiv.org/abs/1703.07402)
 
+DeepSORT code is largely borrowed from Nikolai Wojke's [DeepSORT repo](https://github.com/nwojke/deep_sort).

@@ -70,8 +70,7 @@ if args['model'] == 'ground-truth':
         
         writer.write(frame)
         frame_index += 1
-        if frame_index ==100:
-            break
+    
     writer.release()
     vs.release()
 
