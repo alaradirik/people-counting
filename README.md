@@ -2,14 +2,13 @@
 
 University of Glasgow, MSc. Thesis Project
 
-This project an experiment to compare the performance of combinations of popular and state-of-the-art object detection models and multi-object tracking algorithms. All combinations are evaluated on the [Oxford Town Centre Dataset](http://www.robots.ox.ac.uk/~lav/Research/Projects/2009bbenfold_headpose/project.html) with the objective of tracking and counting multiple pedestrians crossing a ROI in a video sequence (MOT).
+This project an experiment to compare the performance of combinations of popular and state-of-the-art object detection models and multi-object tracking algorithms. All combinations are evaluated on the [Town Centre Dataset](http://www.robots.ox.ac.uk/~lav/Research/Projects/2009bbenfold_headpose/project.html) with the objective of tracking and counting the pedestrians crossing a LOI in a video sequence (MOT). New evaluation datasets will be added.
 
 ## Project Structure
 
     .
-    ├── detector/                       # Pre-trained person detection models files and frozen TF graphs
+    ├── detectors/                      # Pre-trained person detection models files and frozen TF graphs
     ├── trackers/                       # Multi-object tracking algorithms
-    ├── deep_sort/                      # DeepSORT module   
     ├── utils                           # Utility functions to process inputs and video frames
         └── file_utils.py
         └── image_utils.py
@@ -24,7 +23,6 @@ This project an experiment to compare the performance of combinations of popular
     ├── run_sort.py                     # Runs SORT
     ├── run_deepsort.py                 # Runs DeepSORT
     ├── groundtruth.py                  # Generates Oxford Town Centre video with ground truth annotations
-    ├── track_with_groundtruth.py       # Track using ground truth detections (for Oxford Town Centre video)
     ├── requirements.txt                # Dependencies
     └── README.md
 
@@ -39,14 +37,20 @@ Input arguments and options:
 - **threshold:** non-maxima suppression threshold - default is 0.3
 - **line:** automatically assign ROI, use user input to draw a boundary line on frame or manually enter line coordinates - select 0, 1 or 2
 
+--line 1 opens a visual interface to draw a line on the input video, --line 2 prompts user to enter line coordinates: x1 y1 x2 y2.
+
 Run the script:
 python main.py --model [DETECTION_MODEL]--input [INPUT_VIDEO_PATH] --output [OUTPUT_FOLDER] --line 0
 
 ## Available Detection Models
 - YOLOv3 can be loaded using the model argument: --model yolo
-- Tensorflow models pretrained on the COCO dataset. A full list of the available models can be seen at [Tensorflow Model Zoo.](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
+- TensorFlow models pretrained on the COCO dataset. A full list of the available models can be seen at [Tensorflow Model Zoo.](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md)
 - HAAR Cascade for full body detection: --model haar
 - HOG with Linear SVM: --model hog
+
+To use the TensorFlow models select a model from the model zoo and pass it as the model argument: --model ssdlite_mobilenet_v2_coco. This automatically creates a folder in detectors/ and downloads the model files if theey don't exist.
+
+Use --model ground-truth to track with ground truth detections. ground-truth option uses the annotations of the [Town Centre Dataset](https://www.robots.ox.ac.uk/ActiveVision/Research/Projects/2009bbenfold_headpose/project.html).
 
 ## Available Trackers
 - [SORT](https://arxiv.org/abs/1602.00763) with Kalman Filter

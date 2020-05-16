@@ -22,8 +22,13 @@ file_utils.create_paths()
 
 tracker = Sort(use_dlib=args['dlib'])
 
+if args['model'] == 'ground-truth':
+    input_file = './input_videos/TownCentreXVID.mp4'
+else: 
+    args['input']
+
 # initialize the video stream, pointer to output video file, and frame dimensions
-vs = cv2.VideoCapture(args['input'])
+vs = cv2.VideoCapture(input_file)
 fps = int(vs.get(cv2.CAP_PROP_FPS))
 total = int(vs.get(cv2.CAP_PROP_FRAME_COUNT))
 (W, H) = (int(vs.get(cv2.CAP_PROP_FRAME_WIDTH)), int(vs.get(cv2.CAP_PROP_FRAME_HEIGHT)))
@@ -32,9 +37,45 @@ fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 writer = cv2.VideoWriter('output/output.mp4', fourcc, fps, (W, H), True)
 
 # get line info
-line = image_utils.define_ROI(int(args['line']), args['input'], H, W)
+line = image_utils.define_ROI(int(args['line']), input_file, H, W)
 
-if args['model'] == 'haar':
+if args['model'] == 'ground-truth':
+    detector = model_utils.GroundTruthDetections()
+
+    frame_index = 0
+    while True:
+        (grabbed, frame) = vs.read()
+        if not grabbed:
+            break
+
+        detections = detector.get_detected_items(frame_index)
+        trackers = tracker.update(detections, frame)
+
+        current = {}
+        for d in trackers:
+            d = d.astype(np.int32)
+
+            frame = image_utils.draw_box(frame, d, (0,255,0))
+
+            if detections != []:
+                cv2.putText(frame, 'Detection active', (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,255,0), 2)
+            
+            current[d[4]] = (d[0], d[1], d[2], d[3])
+            if d[4] in tracker.previous:
+                previous_box = tracker.previous[d[4]]
+                entry, exit = math_utils.compare_with_prev_position(previous_box, d, line, entry, exit)
+
+        frame = image_utils.annotate_frame(frame, line, entry, exit, H, W)
+        tracker.previous = current
+        
+        writer.write(frame)
+        frame_index += 1
+        if frame_index ==100:
+            break
+    writer.release()
+    vs.release()
+
+elif args['model'] == 'haar':
     person_cascade = cv2.CascadeClassifier('./detectors/haar_cascade/pedestrian.xml')
 
     frame_index = 0
@@ -194,4 +235,3 @@ else:
 
         writer.release()
         vs.release()
-

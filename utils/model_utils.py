@@ -38,7 +38,7 @@ def download_yolo_weights():
     """
     download_url = 'https://pjreddie.com/media/files/yolov3.weights'
     opener = urllib.request.URLopener()
-    opener.retrieve(download_url, './detectors/yolo-obj/yolov3.weights')
+    opener.retrieve(download_url, './detectors/yolov3/yolov3.weights')
     return
 
 ### TODO: convert YOLOv3 to TF graph
@@ -47,9 +47,11 @@ def set_yolo_model():
     Load YOLOv3 object detection model into memory.
     """
     model_found = 0
-    MODEL_DIR = './detectors/yolo_v3'
-    files = os.listdir(MODEL_DIR)
+    MODEL_DIR = './detectors/yolov3'
+    if not os.path.exists(MODEL_DIR):
+        os.makedirs(MODEL_DIR)
 
+    files = os.listdir(MODEL_DIR)
     if 'yolov3.weights' in files:
         model_found = 1
     else:
@@ -87,13 +89,15 @@ def set_tf_model(model_name, label_name):
     num_classes = 90
 
     # download model if not found
-    if (model_found == 0):      
+    if (model_found == 0):
+        os.makedirs("./detectors/" + model_name)      
         opener = urllib.request.URLopener()
         opener.retrieve(download_base + model_file, "./detectors/" + model_file)
         tar_file = tarfile.open("./detectors/" + model_file)
         for file in tar_file.getmembers():
           file_name = os.path.basename(file.name)
           tar_file.extract(file, "./detectors")
+        os.remove("./detectors/" + model_name + ".tar.gz")
 
     # load frozen Tensorflow model into memory
     detection_graph = tf.Graph()
