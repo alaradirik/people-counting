@@ -2,7 +2,7 @@
 
 University of Glasgow, MSc. Thesis Project
 
-This project consists of a set of experiments to compare the performance of combinations of popular and state-of-the-art object detection models and multi-object tracking algorithms. All combinations are evaluated on the [Town Centre Dataset](http://www.robots.ox.ac.uk/~lav/Research/Projects/2009bbenfold_headpose/project.html) with the objective of tracking and counting the pedestrians crossing a LOI in a video sequence (MOT). New evaluation datasets will be added.
+This project consists of a set of experiments to compare the performance of combinations of popular and state-of-the-art object detection models and multi-object tracking algorithms. All combinations are evaluated on the [Town Centre Dataset](http://www.robots.ox.ac.uk/~lav/Research/Projects/2009bbenfold_headpose/project.html) and the MOT17 dataset with the objective of tracking and counting the pedestrians crossing a LOI in a video sequence (MOT). New evaluation datasets will be added.
 
 
 ## Project Structure
