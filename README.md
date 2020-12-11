@@ -41,7 +41,8 @@ Input arguments and options:
 --line 1 opens a visual interface to draw a line on the input video, --line 2 prompts user to enter line coordinates: x1 y1 x2 y2.
 
 Run the script:
-python main.py --model [DETECTION_MODEL]--input [INPUT_VIDEO_PATH] --output [OUTPUT_FOLDER] --line 0
+python run_sort.py --model [DETECTION_MODEL]--input [INPUT_VIDEO_PATH] --output [OUTPUT_FOLDER] --line 0  
+python run_deepsort.py --model [DETECTION_MODEL]--input [INPUT_VIDEO_PATH] --output [OUTPUT_FOLDER] --line 0
 
 ## Available Detection Models
 - YOLOv3 can be loaded using the model argument: --model yolo
